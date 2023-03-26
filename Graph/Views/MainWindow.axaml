@@ -1,0 +1,52 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:Graph.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="Graph.Views.MainWindow"
+		xmlns:local="clr-namespace:Graph.Views;assembly=Graph"    
+		Icon="/Assets/avalonia-logo.ico"
+        Title="Graph">
+
+    <Design.DataContext>
+        <vm:MainWindowViewModel/>
+    </Design.DataContext>
+
+    <Grid RowDefinitions="0.05*,*">
+		<Grid Grid.Row="0" ColumnDefinitions="0.1*,0.1*,0.4*,0.2*,0.2*">
+		    <Button Grid.Column="0" Command="{Binding IncSI}">Import</Button>
+		    <TextBox Grid.Column="1" Text="{Binding SI}"></TextBox>
+		</Grid>
+		
+		<Grid Grid.Row="1" ColumnDefinitions="0.3*,0.6*,0.1*">
+			<ComboBox Grid.Column="0" SelectedIndex="{Binding SI}" Width="350">
+				<ComboBoxItem>Inline Items</ComboBoxItem>
+				<ComboBoxItem>Inline Item 2</ComboBoxItem>
+				<ComboBoxItem>Inline Item 3</ComboBoxItem>
+				<ComboBoxItem>Inline Item 4</ComboBoxItem>
+				<ComboBoxItem>Inline Item 4</ComboBoxItem>
+			</ComboBox>
+			<ContentControl Grid.Column="0" Content="{Binding Content}"/>
+
+			<Canvas Grid.Column="1" Name="MyCanv">
+				
+			</Canvas>
+			
+			<Grid Grid.Column="2" RowDefinitions="0.2*,*">
+				<Button Grid.Row="0" Command="{Binding Remove}">Delete</Button>
+				<ListBox Grid.Row="1" Items="{Binding CanvasMODEL}" SelectedIndex="{Binding SelectedIndex}">
+					<ListBox.ItemTemplate>
+						<DataTemplate>
+							<StackPanel Orientation="Horizontal">
+								<StackPanel Width="320" Orientation="Horizontal">
+									<TextBlock Text="{Binding Name}"/>
+								</StackPanel>
+							</StackPanel>
+						</DataTemplate>
+					</ListBox.ItemTemplate>
+				</ListBox>
+			</Grid>
+		</Grid>
+	</Grid>
+</Window>

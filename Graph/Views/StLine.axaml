@@ -1,0 +1,48 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+			 xmlns:vm="using:NotePad.ViewModels"
+             x:Class="Graph.Views.StLine">
+	<DockPanel>
+		<Grid RowDefinitions="0.1*,0.1*,0.1*,0.1*,0.1*,0.1*,50">
+			
+			<TextBlock Grid.Row="1" Text="Name:"/>
+			<TextBox Grid.Row="1" Width="200" Height="70" Text="{Binding $parent[Window].DataContext.Name}">
+
+			</TextBox>
+			<TextBlock Grid.Row="2" Text="Start Point:"/>
+			<TextBox Name="TextBoxStart" Grid.Row="2" Text="{Binding $parent[Window].DataContext.StartPoint}" Width="200" Height="70">
+
+			</TextBox>
+			<TextBlock Grid.Row="3" Text="End Point:"/>
+			<TextBox Name="TextBoxEnd" Grid.Row="3" Text="{Binding $parent[Window].DataContext.EndPoint}" Width="200" Height="70">
+
+			</TextBox>
+
+			<Grid Grid.Row="4" ColumnDefinitions="100,50">
+				<TextBlock Grid.Column="0" Text="Line color:"/>
+				<ComboBox Grid.Column="1" SelectedIndex="{Binding Test}" Width="250" x:Name="ComboBoxColor">
+					<ComboBoxItem>Red</ComboBoxItem>
+					<ComboBoxItem>Purple</ComboBoxItem>
+					<ComboBoxItem>Black</ComboBoxItem>
+					<ComboBoxItem>Inline Item 4</ComboBoxItem>
+				</ComboBox>
+			</Grid>
+			<Grid Grid.Row="5" ColumnDefinitions="100,50">
+				<TextBlock Grid.Column="0" Text="thick of line:"/>
+				<ComboBox Grid.Column="1" SelectedIndex="0" Width="250">
+					<ComboBoxItem>Inline Items</ComboBoxItem>
+					<ComboBoxItem>Inline Item 2</ComboBoxItem>
+					<ComboBoxItem>Inline Item 3</ComboBoxItem>
+					<ComboBoxItem>Inline Item 4</ComboBoxItem>
+				</ComboBox>
+			</Grid>
+			<Grid Grid.Row="6" ColumnDefinitions="*,*">
+				<Button Grid.Column="0" Command="{Binding $parent[Window].DataContext.AddLine}">Add</Button>
+				<Button Grid.Column="1" >Reset</Button>
+			</Grid>
+		</Grid>
+	</DockPanel>
+</UserControl>

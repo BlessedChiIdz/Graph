@@ -121,6 +121,7 @@ namespace Graph.ViewModels
             new Pat(),
             new StLine()
             };
+            [ObservableProperty]
         ViewModelBase Content => contentTest[SI];
         
 

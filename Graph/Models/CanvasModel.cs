@@ -9,7 +9,7 @@ namespace Graph.Models
 {
     public class CanvasModel
     {
-        public string? Name { get; set; }
+        public string Name { get; set; }
         public Line? line { get; set; }
         public Polyline? pLine { get; set; }
         public Rectangle? Rec { get; set; }

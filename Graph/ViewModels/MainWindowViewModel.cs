@@ -43,8 +43,7 @@ namespace Graph.ViewModels
             get => CanvMod;
             set => SetProperty(ref CanvMod, value);
         }
-        [ObservableProperty]
-        [NotifyPropertyChangedFor(nameof(Content))]
+        private UserControl _content;
         public int _selectedIndexFig = 0;
         public string _name = "";
         public string _pathF = "";
@@ -57,7 +56,13 @@ namespace Graph.ViewModels
         public string _dots = "";
         public int _width = 5;
         public int _test = 0;
-
+        private readonly UserControl[] _contentArray = new UserControl[] {
+            new El(),
+            new lomLine(),
+            new Pat(),
+            new Rec(),
+            new StLine(),
+        };
         public string Name
         {
             get => _name;
@@ -99,10 +104,17 @@ namespace Graph.ViewModels
             get => _thick;
             set => SetProperty(ref _thick, value);
         }
+        
         public int SI
         {
             get => _selectedIndexFig;
-            set => SetProperty(ref _selectedIndexFig, value);
+
+            set { SetProperty(ref _selectedIndexFig, value); Content = _contentArray[value]; } 
+        }
+        public UserControl Content
+        {
+            get => _content;
+            set => SetProperty(ref _content, value);
         }
         public int Width
         {
@@ -114,16 +126,7 @@ namespace Graph.ViewModels
             get => _dots;
             set => SetProperty(ref _dots, value);
         }
-        public ObservableCollection<ViewModelBase> contentTest = new ObservableCollection<ViewModelBase>{
-            new Rec(),
-            new El(),
-            new lomLine(),
-            new Pat(),
-            new StLine()
-            };
-        ViewModelBase Content => contentTest[SI];
         
-
         public void AddLine()
         {
             string start = StartPoint;
@@ -242,22 +245,22 @@ namespace Graph.ViewModels
                 _canv.Children.Remove(CanvasMODEL[SelectedIndex].line);
                 CanvasMODEL.RemoveAt(SelectedIndex);
             }
-            if (CanvasMODEL[SelectedIndex].pLine != null)
+            else if (CanvasMODEL[SelectedIndex].pLine != null)
             {
                 _canv.Children.Remove(CanvasMODEL[SelectedIndex].pLine);
                 CanvasMODEL.RemoveAt(SelectedIndex);
             }
-            if (CanvasMODEL[SelectedIndex].Rec != null)
+            else if (CanvasMODEL[SelectedIndex].Rec != null)
             {
                 _canv.Children.Remove(CanvasMODEL[SelectedIndex].Rec);
                 CanvasMODEL.RemoveAt(SelectedIndex);
             }
-            if (CanvasMODEL[SelectedIndex].El != null)
+            else if (CanvasMODEL[SelectedIndex].El != null)
             {
                 _canv.Children.Remove(CanvasMODEL[SelectedIndex].El);
                 CanvasMODEL.RemoveAt(SelectedIndex);
             }
-            if (CanvasMODEL[SelectedIndex].P != null)
+            else if (CanvasMODEL[SelectedIndex].P != null)
             {
                 _canv.Children.Remove(CanvasMODEL[SelectedIndex].P);
                 CanvasMODEL.RemoveAt(SelectedIndex);
@@ -267,7 +270,8 @@ namespace Graph.ViewModels
         public MainWindowViewModel(MainWindow mw)
         {
             _canv = mw.Find<Canvas>("MyCanv");
-            
+            _content = _contentArray[0];
         }
+        
     }
 }

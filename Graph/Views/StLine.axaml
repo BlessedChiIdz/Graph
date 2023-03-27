@@ -23,7 +23,7 @@
 
 			<Grid Grid.Row="4" ColumnDefinitions="100,50">
 				<TextBlock Grid.Column="0" Text="Line color:"/>
-				<ComboBox Grid.Column="1" SelectedIndex="{Binding Test}" Width="250" x:Name="ComboBoxColor">
+				<ComboBox Grid.Column="1" SelectedIndex="{Binding SelectedColor}" Width="250" x:Name="ComboBoxColor">
 					<ComboBoxItem>Red</ComboBoxItem>
 					<ComboBoxItem>Purple</ComboBoxItem>
 					<ComboBoxItem>Black</ComboBoxItem>
@@ -32,7 +32,7 @@
 			</Grid>
 			<Grid Grid.Row="5" ColumnDefinitions="100,50">
 				<TextBlock Grid.Column="0" Text="thick of line:"/>
-				<ComboBox Grid.Column="1" SelectedIndex="0" Width="250">
+				<ComboBox Grid.Column="1" Width="250">
 					<ComboBoxItem>Inline Items</ComboBoxItem>
 					<ComboBoxItem>Inline Item 2</ComboBoxItem>
 					<ComboBoxItem>Inline Item 3</ComboBoxItem>

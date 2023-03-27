@@ -1,25 +1,25 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Reflection.Metadata;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Shapes;
 using Avalonia.Media;
-using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
-using DynamicData;
 using Graph.Models;
 using Graph.Views;
 namespace Graph.ViewModels
 {
     public partial class MainWindowViewModel : ViewModelBase
     {
-        public ObservableCollection<Canvas> Coll = new ObservableCollection<Canvas>();
         public ObservableCollection<CanvasModel> CanvMod = new ObservableCollection<CanvasModel>();
-        public ObservableCollection<Line> TestCol = new ObservableCollection<Line>();
+        int selectedColor;
         int selectedIndex;
-
+        private IBrush[] brush = new IBrush[] {Brushes.Black,Brushes.Blue,Brushes.Red};
+        
+        public int SelectedColor {
+            get => selectedColor;
+            set => SetProperty(ref selectedColor, value);
+        }
         public int SelectedIndex
         {
             get => selectedIndex;
@@ -34,10 +34,6 @@ namespace Graph.ViewModels
         }
         public StLine StLine1 { get; set; }
         public Views.lomLine lomLine { get; set; }
-        public ObservableCollection<Canvas> Colletion {
-            get => Coll;
-            set => SetProperty(ref Coll, value);
-        }
         public ObservableCollection<CanvasModel> CanvasMODEL
         {
             get => CanvMod;
@@ -144,12 +140,11 @@ namespace Graph.ViewModels
             {
                 StartPoint = Stpoint,
                 EndPoint = Endpoint,
-                Stroke = Brushes.Aqua,
+                Stroke = brush[SelectedColor],
                 StrokeThickness = Thick,
             };
             Canvas.SetLeft(newRec, 100);
             Canvas.SetTop(newRec, 100);
-            TestCol.Add(newRec);
             CanvMod.Add(new CanvasModel { Name = Name,line=newRec });
             _canv.Children.Add(newRec);
         }
@@ -171,7 +166,7 @@ namespace Graph.ViewModels
                 pointList.Add(new Point(result[i], result[i+1]));
             }
             
-            newRec.Stroke = Brushes.Aqua;
+            newRec.Stroke = brush[SelectedColor];
             newRec.Points = pointList;
             newRec.StrokeThickness = Thick;
             Canvas.SetLeft(newRec, 100);
@@ -194,7 +189,7 @@ namespace Graph.ViewModels
             newRec.Width = width;
             newRec.Height = height;
             newRec.StrokeThickness = Thick;
-            newRec.Stroke = Brushes.Aqua;
+            newRec.Stroke = brush[SelectedColor];
             Canvas.SetLeft(newRec, resultSt1);
             Canvas.SetTop(newRec, resultSt2);
             CanvMod.Add(new CanvasModel { Name = Name, Rec = newRec });
@@ -216,7 +211,7 @@ namespace Graph.ViewModels
             newRec.Width = width;
             newRec.Height = height;
             newRec.StrokeThickness = Thick;
-            newRec.Stroke = Brushes.Aqua;
+            newRec.Stroke = brush[SelectedColor];
             Canvas.SetLeft(newRec, resultSt1);
             Canvas.SetTop(newRec, resultSt2);
             CanvMod.Add(new CanvasModel { Name = Name, El = newRec });
@@ -230,7 +225,7 @@ namespace Graph.ViewModels
             string[] wordsSt = start.Split(new char[] { ' ' });
             Path newRec = new Path();
             newRec.Data = Geometry.Parse(PathF);
-            newRec.Stroke = Brushes.Aqua;
+            newRec.Stroke = brush[SelectedColor];
             newRec.StrokeThickness = Thick;
             Canvas.SetLeft(newRec, 0);
             Canvas.SetTop(newRec, 0);
@@ -271,7 +266,8 @@ namespace Graph.ViewModels
         {
             _canv = mw.Find<Canvas>("MyCanv");
             _content = _contentArray[0];
-        }
+            
+    }
         
     }
 }

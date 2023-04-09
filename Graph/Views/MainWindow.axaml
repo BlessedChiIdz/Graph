@@ -26,6 +26,7 @@
 				<ComboBoxItem>Castom</ComboBoxItem>
 				<ComboBoxItem>Rectangle</ComboBoxItem>
 				<ComboBoxItem>DefLine</ComboBoxItem>
+				<ComboBoxItem>Change</ComboBoxItem>
 			</ComboBox>
 			<ContentControl Grid.Column="0" Content="{Binding Content}"/>
 

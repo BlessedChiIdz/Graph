@@ -36,7 +36,6 @@
 					<ComboBoxItem>Red</ComboBoxItem>
 					<ComboBoxItem>Purple</ComboBoxItem>
 					<ComboBoxItem>Black</ComboBoxItem>
-					<ComboBoxItem>Inline Item 4</ComboBoxItem>
 				</ComboBox>
 			</Grid>
 			<Grid Grid.Row="6" ColumnDefinitions="100,150">

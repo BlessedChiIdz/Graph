@@ -15,5 +15,10 @@ namespace Graph.Models
         public Rectangle? Rec { get; set; }
         public Ellipse? El { get; set; }
         public Path? P { get; set; }
+        public int? Left { get; set; }
+        public int? Top { get; set; }
+        public double? Start { get; set; }
+        public double? End { get; set; }
+
     }
 }

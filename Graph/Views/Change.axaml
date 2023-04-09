@@ -1,0 +1,19 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+			 xmlns:vm="using:NotePad.ViewModels"
+             x:Class="Graph.Views.Change">
+	<DockPanel>
+		<Grid RowDefinitions="50,50,50,50,50,50,50,50">
+			<TextBox Text="{Binding Rect}" Grid.Row="1"></TextBox>
+			<TextBox Text="{Binding Dot}" Grid.Row="2"></TextBox>
+			<Button Command="{Binding $parent[Window].DataContext.Rotate}" Grid.Row="3">rotate</Button>
+			<TextBox Text="{Binding Sc}" Grid.Row="4"></TextBox>
+			<Button Command="{Binding $parent[Window].DataContext.Scale}" Grid.Row="5">Scale</Button>
+			<TextBox Text="{Binding Sk}" Grid.Row="6"></TextBox>
+			<Button Command="{Binding $parent[Window].DataContext.Skew}" Grid.Row="7">Skew</Button>
+		</Grid>
+	</DockPanel>
+</UserControl>

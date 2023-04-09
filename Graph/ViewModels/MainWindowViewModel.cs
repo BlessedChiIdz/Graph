@@ -1,9 +1,12 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Reflection.Metadata;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Shapes;
+using Avalonia.Layout;
 using Avalonia.Media;
 using Graph.Models;
 using Graph.Views;
@@ -49,22 +52,46 @@ namespace Graph.ViewModels
         public int _thick = 5;
         public string _w = "";
         public string _h = "";
+        public string _rectan = "5";
         public string _dots = "";
         public int _width = 5;
         public int _test = 0;
+        public string _dot = "0";
+        public string _scale = "0";
+        public string _skew = "0";
+
         private readonly UserControl[] _contentArray = new UserControl[] {
             new El(),
             new lomLine(),
             new Pat(),
             new Rec(),
             new StLine(),
+            new Change(),
         };
         public string Name
         {
             get => _name;
             set => SetProperty(ref _name, value);
         }
-
+        public string Sk
+        {
+            get => _skew;
+            set => SetProperty(ref _skew, value);
+        }
+        public string Sc
+        {
+            get => _scale;
+            set => SetProperty(ref _scale, value);
+        }
+        public string Dot {
+            get => _dot;
+            set => SetProperty(ref _dot, value);
+        }
+        public string Rect
+        {
+            get => _rectan;
+            set => SetProperty(ref _rectan, value);
+        }
         public string PathF
         {
             get => _pathF;
@@ -122,7 +149,10 @@ namespace Graph.ViewModels
             get => _dots;
             set => SetProperty(ref _dots, value);
         }
-        
+        public CanvasModel Ex() {
+            CanvasModel canvas = CanvasMODEL[SelectedIndex];
+            return canvas;
+        }
         public void AddLine()
         {
             string start = StartPoint;
@@ -143,9 +173,8 @@ namespace Graph.ViewModels
                 Stroke = brush[SelectedColor],
                 StrokeThickness = Thick,
             };
-            Canvas.SetLeft(newRec, 100);
-            Canvas.SetTop(newRec, 100);
-            CanvMod.Add(new CanvasModel { Name = Name,line=newRec });
+            
+            CanvMod.Add(new CanvasModel { Name = Name,line=newRec, Start = (resultSt1+resultEnd1)/2,End = (resultSt2 + resultEnd2)/2});
             _canv.Children.Add(newRec);
         }
         public void AddLomeLine()
@@ -169,8 +198,6 @@ namespace Graph.ViewModels
             newRec.Stroke = brush[SelectedColor];
             newRec.Points = pointList;
             newRec.StrokeThickness = Thick;
-            Canvas.SetLeft(newRec, 100);
-            Canvas.SetTop(newRec, 100);
             CanvMod.Add(new CanvasModel { Name = Name, pLine = newRec });
             _canv.Children.Add(newRec);
         }
@@ -190,15 +217,15 @@ namespace Graph.ViewModels
             newRec.Height = height;
             newRec.StrokeThickness = Thick;
             newRec.Stroke = brush[SelectedColor];
+            newRec.Fill = brush[SelectedColor];
             Canvas.SetLeft(newRec, resultSt1);
             Canvas.SetTop(newRec, resultSt2);
-            CanvMod.Add(new CanvasModel { Name = Name, Rec = newRec });
+            CanvMod.Add(new CanvasModel { Name = Name, Rec = newRec,Left=resultSt1,Top=resultSt2 });
             _canv.Children.Add(newRec);
 
         }
         public void AddEl()
         {
-
             string start = StartPoint;
             string[] wordsSt = start.Split(new char[] { ' ' });
             int resultSt1 = Convert.ToInt32(wordsSt[0]);
@@ -261,7 +288,353 @@ namespace Graph.ViewModels
                 CanvasMODEL.RemoveAt(SelectedIndex);
             }
         }
+        public void Rotate() {
 
+                 if (CanvasMODEL[SelectedIndex].Rec != null)
+                    {
+                int React = Convert.ToInt32(Rect);
+
+                Rectangle rotatedRectangle = CanvasMODEL[SelectedIndex].Rec;
+                string[] wordsSt = Dot.Split(new char[] { ' ' });
+                int resultSt1 = Convert.ToInt32(wordsSt[0]);
+                int resultSt2 = Convert.ToInt32(wordsSt[1]);
+                RotateTransform rotateTransform1 = new RotateTransform(React);
+                TranslateTransform translateTransform = new TranslateTransform(resultSt1, resultSt2);
+                rotatedRectangle.RenderTransform = translateTransform;
+                rotatedRectangle.RenderTransform = rotateTransform1;
+
+                _canv.Children.Remove(CanvasMODEL[SelectedIndex].Rec);
+
+                _canv.Children.Add(rotatedRectangle);
+
+                string tempName = CanvMod[selectedIndex].Name;
+
+                CanvasMODEL.RemoveAt(SelectedIndex);
+
+                CanvasMODEL.Add(new CanvasModel { Name = tempName, Rec = rotatedRectangle });
+            }
+
+
+                else if (CanvasMODEL[SelectedIndex].line != null)
+                    {
+                int React = Convert.ToInt32(Rect);
+
+                Line rotatedFigure = CanvasMODEL[SelectedIndex].line;
+                string[] wordsSt = Dot.Split(new char[] { ' ' });
+                int resultSt1 = Convert.ToInt32(wordsSt[0]);
+                int resultSt2 = Convert.ToInt32(wordsSt[1]);
+                RotateTransform rotateTransform1 = new RotateTransform(React);
+                TranslateTransform translateTransform = new TranslateTransform(resultSt1, resultSt2);
+                rotatedFigure.RenderTransform = translateTransform;
+                rotatedFigure.RenderTransform = rotateTransform1;
+
+                _canv.Children.Remove(CanvasMODEL[SelectedIndex].line);
+
+                _canv.Children.Add(rotatedFigure);
+
+                string tempName = CanvMod[selectedIndex].Name;
+
+                CanvasMODEL.Add(new CanvasModel { Name = tempName, line = rotatedFigure });
+
+                CanvasMODEL.RemoveAt(SelectedIndex);
+                 }
+
+
+                else if (CanvasMODEL[SelectedIndex].pLine != null)
+                {
+                int React = Convert.ToInt32(Rect);
+                string[] wordsSt = Dot.Split(new char[] { ' ' });
+                int resultSt1 = Convert.ToInt32(wordsSt[0]);
+                int resultSt2 = Convert.ToInt32(wordsSt[1]);
+                Polyline rotatedFigure = CanvasMODEL[SelectedIndex].pLine;
+                
+                RotateTransform rotateTransform1 = new RotateTransform(React);
+                TranslateTransform translateTransform = new TranslateTransform(resultSt1, resultSt2);
+                rotatedFigure.RenderTransform = translateTransform;
+                rotatedFigure.RenderTransform = rotateTransform1;
+
+                _canv.Children.Remove(CanvasMODEL[SelectedIndex].pLine);
+
+                _canv.Children.Add(rotatedFigure);
+
+                string tempName = CanvMod[selectedIndex].Name;
+
+                CanvasMODEL.Add(new CanvasModel { Name = tempName, pLine = rotatedFigure });
+
+                CanvasMODEL.RemoveAt(SelectedIndex);
+                }
+                else if (CanvasMODEL[SelectedIndex].El != null)
+                {
+                int React = Convert.ToInt32(Rect);
+                string[] wordsSt = Dot.Split(new char[] { ' ' });
+                int resultSt1 = Convert.ToInt32(wordsSt[0]);
+                int resultSt2 = Convert.ToInt32(wordsSt[1]);
+                Ellipse rotatedFigure = CanvasMODEL[SelectedIndex].El;
+
+                RotateTransform rotateTransform1 = new RotateTransform(React);
+                TranslateTransform translateTransform = new TranslateTransform(resultSt1, resultSt2);
+                rotatedFigure.RenderTransform = translateTransform;
+                rotatedFigure.RenderTransform = rotateTransform1;
+
+                _canv.Children.Remove(CanvasMODEL[SelectedIndex].El);
+
+                _canv.Children.Add(rotatedFigure);
+
+                string tempName = CanvMod[selectedIndex].Name;
+
+                CanvasMODEL.Add(new CanvasModel { Name = tempName, El = rotatedFigure });
+
+                CanvasMODEL.RemoveAt(SelectedIndex);
+            }
+                else if (CanvasMODEL[SelectedIndex].P != null)
+                {
+                int React = Convert.ToInt32(Rect);
+                string[] wordsSt = Dot.Split(new char[] { ' ' });
+                int resultSt1 = Convert.ToInt32(wordsSt[0]);
+                int resultSt2 = Convert.ToInt32(wordsSt[1]);
+                Path rotatedFigure = CanvasMODEL[SelectedIndex].P;
+
+                RotateTransform rotateTransform1 = new RotateTransform(React);
+                TranslateTransform translateTransform = new TranslateTransform(resultSt1, resultSt2);
+                rotatedFigure.RenderTransform = translateTransform;
+                rotatedFigure.RenderTransform = rotateTransform1;
+
+                _canv.Children.Remove(CanvasMODEL[SelectedIndex].P);
+
+                _canv.Children.Add(rotatedFigure);
+
+                string tempName = CanvMod[selectedIndex].Name;
+
+                CanvasMODEL.Add(new CanvasModel { Name = tempName, P = rotatedFigure });
+
+                CanvasMODEL.RemoveAt(SelectedIndex);
+            }
+        }
+        public void Scale()
+        {
+
+            if (CanvasMODEL[SelectedIndex].Rec != null)
+            {
+                string[] wordsSt = Sc.Split(new char[] { ' ' });
+                int resultSt1 = Convert.ToInt32(wordsSt[0]);
+                int resultSt2 = Convert.ToInt32(wordsSt[1]);
+                Rectangle rotatedRectangle = CanvasMODEL[SelectedIndex].Rec;
+
+                ScaleTransform rotateTransform1 = new ScaleTransform(resultSt1,resultSt2);
+
+                rotatedRectangle.RenderTransform = rotateTransform1;
+
+                _canv.Children.Remove(CanvasMODEL[SelectedIndex].Rec);
+
+                _canv.Children.Add(rotatedRectangle);
+
+                string tempName = CanvMod[selectedIndex].Name;
+
+                CanvasMODEL.RemoveAt(SelectedIndex);
+
+                CanvasMODEL.Add(new CanvasModel { Name = tempName, Rec = rotatedRectangle });
+            }
+
+
+            else if (CanvasMODEL[SelectedIndex].line != null)
+            {
+                string[] wordsSt = Sc.Split(new char[] { ' ' });
+                int resultSt1 = Convert.ToInt32(wordsSt[0]);
+                int resultSt2 = Convert.ToInt32(wordsSt[1]);
+                Line rotatedRectangle = CanvasMODEL[SelectedIndex].line;
+
+                ScaleTransform rotateTransform1 = new ScaleTransform(resultSt1, resultSt2);
+
+                rotatedRectangle.RenderTransform = rotateTransform1;
+
+                _canv.Children.Remove(CanvasMODEL[SelectedIndex].line);
+
+                _canv.Children.Add(rotatedRectangle);
+
+                string tempName = CanvMod[selectedIndex].Name;
+
+                CanvasMODEL.RemoveAt(SelectedIndex);
+
+                CanvasMODEL.Add(new CanvasModel { Name = tempName, line = rotatedRectangle });
+            }
+
+
+            else if (CanvasMODEL[SelectedIndex].pLine != null)
+            {
+                string[] wordsSt = Sc.Split(new char[] { ' ' });
+                int resultSt1 = Convert.ToInt32(wordsSt[0]);
+                int resultSt2 = Convert.ToInt32(wordsSt[1]);
+                Polyline rotatedRectangle = CanvasMODEL[SelectedIndex].pLine;
+
+                ScaleTransform rotateTransform1 = new ScaleTransform(resultSt1, resultSt2);
+
+                rotatedRectangle.RenderTransform = rotateTransform1;
+
+                _canv.Children.Remove(CanvasMODEL[SelectedIndex].pLine);
+
+                _canv.Children.Add(rotatedRectangle);
+
+                string tempName = CanvMod[selectedIndex].Name;
+
+                CanvasMODEL.RemoveAt(SelectedIndex);
+
+                CanvasMODEL.Add(new CanvasModel { Name = tempName, pLine = rotatedRectangle });
+            }
+            else if (CanvasMODEL[SelectedIndex].El != null)
+            {
+                string[] wordsSt = Sc.Split(new char[] { ' ' });
+                int resultSt1 = Convert.ToInt32(wordsSt[0]);
+                int resultSt2 = Convert.ToInt32(wordsSt[1]);
+                Ellipse rotatedRectangle = CanvasMODEL[SelectedIndex].El;
+
+                ScaleTransform rotateTransform1 = new ScaleTransform(resultSt1, resultSt2);
+
+                rotatedRectangle.RenderTransform = rotateTransform1;
+
+                _canv.Children.Remove(CanvasMODEL[SelectedIndex].El);
+
+                _canv.Children.Add(rotatedRectangle);
+
+                string tempName = CanvMod[selectedIndex].Name;
+
+                CanvasMODEL.RemoveAt(SelectedIndex);
+
+                CanvasMODEL.Add(new CanvasModel { Name = tempName, El = rotatedRectangle });
+            }
+            else if (CanvasMODEL[SelectedIndex].P != null)
+            {
+                string[] wordsSt = Sc.Split(new char[] { ' ' });
+                int resultSt1 = Convert.ToInt32(wordsSt[0]);
+                int resultSt2 = Convert.ToInt32(wordsSt[1]);
+                Path rotatedRectangle = CanvasMODEL[SelectedIndex].P;
+
+                ScaleTransform rotateTransform1 = new ScaleTransform(resultSt1, resultSt2);
+
+                rotatedRectangle.RenderTransform = rotateTransform1;
+
+                _canv.Children.Remove(CanvasMODEL[SelectedIndex].P);
+
+                _canv.Children.Add(rotatedRectangle);
+
+                string tempName = CanvMod[selectedIndex].Name;
+
+                CanvasMODEL.RemoveAt(SelectedIndex);
+
+                CanvasMODEL.Add(new CanvasModel { Name = tempName, P = rotatedRectangle });
+            }
+        }
+        public void Skew()
+        {
+            if (CanvasMODEL[SelectedIndex].Rec != null)
+            {
+                string[] wordsSt = Sk.Split(new char[] { ' ' });
+                int resultSt1 = Convert.ToInt32(wordsSt[0]);
+                int resultSt2 = Convert.ToInt32(wordsSt[1]);
+                Rectangle rotatedRectangle = CanvasMODEL[SelectedIndex].Rec;
+
+                SkewTransform rotateTransform1 = new SkewTransform(resultSt1, resultSt2);
+
+                rotatedRectangle.RenderTransform = rotateTransform1;
+
+                _canv.Children.Remove(CanvasMODEL[SelectedIndex].Rec);
+
+                _canv.Children.Add(rotatedRectangle);
+
+                string tempName = CanvMod[selectedIndex].Name;
+
+                CanvasMODEL.RemoveAt(SelectedIndex);
+
+                CanvasMODEL.Add(new CanvasModel { Name = tempName, Rec = rotatedRectangle });
+            }
+
+
+            else if (CanvasMODEL[SelectedIndex].line != null)
+            {
+                string[] wordsSt = Sk.Split(new char[] { ' ' });
+                int resultSt1 = Convert.ToInt32(wordsSt[0]);
+                int resultSt2 = Convert.ToInt32(wordsSt[1]);
+                Line rotatedRectangle = CanvasMODEL[SelectedIndex].line;
+
+                SkewTransform rotateTransform1 = new SkewTransform(resultSt1, resultSt2);
+
+                rotatedRectangle.RenderTransform = rotateTransform1;
+
+                _canv.Children.Remove(CanvasMODEL[SelectedIndex].line);
+
+                _canv.Children.Add(rotatedRectangle);
+
+                string tempName = CanvMod[selectedIndex].Name;
+
+                CanvasMODEL.RemoveAt(SelectedIndex);
+
+                CanvasMODEL.Add(new CanvasModel { Name = tempName, line = rotatedRectangle });
+            }
+
+
+            else if (CanvasMODEL[SelectedIndex].pLine != null)
+            {
+                string[] wordsSt = Sk.Split(new char[] { ' ' });
+                int resultSt1 = Convert.ToInt32(wordsSt[0]);
+                int resultSt2 = Convert.ToInt32(wordsSt[1]);
+                Polyline rotatedRectangle = CanvasMODEL[SelectedIndex].pLine;
+
+                SkewTransform rotateTransform1 = new SkewTransform(resultSt1, resultSt2);
+
+                rotatedRectangle.RenderTransform = rotateTransform1;
+
+                _canv.Children.Remove(CanvasMODEL[SelectedIndex].pLine);
+
+                _canv.Children.Add(rotatedRectangle);
+
+                string tempName = CanvMod[selectedIndex].Name;
+
+                CanvasMODEL.RemoveAt(SelectedIndex);
+
+                CanvasMODEL.Add(new CanvasModel { Name = tempName, pLine = rotatedRectangle });
+            }
+            else if (CanvasMODEL[SelectedIndex].El != null)
+            {
+                string[] wordsSt = Sk.Split(new char[] { ' ' });
+                int resultSt1 = Convert.ToInt32(wordsSt[0]);
+                int resultSt2 = Convert.ToInt32(wordsSt[1]);
+                Ellipse rotatedRectangle = CanvasMODEL[SelectedIndex].El;
+
+                SkewTransform rotateTransform1 = new SkewTransform(resultSt1, resultSt2);
+
+                rotatedRectangle.RenderTransform = rotateTransform1;
+
+                _canv.Children.Remove(CanvasMODEL[SelectedIndex].El);
+
+                _canv.Children.Add(rotatedRectangle);
+
+                string tempName = CanvMod[selectedIndex].Name;
+
+                CanvasMODEL.RemoveAt(SelectedIndex);
+
+                CanvasMODEL.Add(new CanvasModel { Name = tempName, El = rotatedRectangle });
+            }
+            else if (CanvasMODEL[SelectedIndex].P != null)
+            {
+                string[] wordsSt = Sk.Split(new char[] { ' ' });
+                int resultSt1 = Convert.ToInt32(wordsSt[0]);
+                int resultSt2 = Convert.ToInt32(wordsSt[1]);
+                Path rotatedRectangle = CanvasMODEL[SelectedIndex].P;
+
+                SkewTransform rotateTransform1 = new SkewTransform(resultSt1, resultSt2);
+
+                rotatedRectangle.RenderTransform = rotateTransform1;
+
+                _canv.Children.Remove(CanvasMODEL[SelectedIndex].P);
+
+                _canv.Children.Add(rotatedRectangle);
+
+                string tempName = CanvMod[selectedIndex].Name;
+
+                CanvasMODEL.RemoveAt(SelectedIndex);
+
+                CanvasMODEL.Add(new CanvasModel { Name = tempName, P = rotatedRectangle });
+            }
+        }
         public MainWindowViewModel(MainWindow mw)
         {
             _canv = mw.Find<Canvas>("MyCanv");

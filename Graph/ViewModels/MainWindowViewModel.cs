@@ -174,19 +174,19 @@ namespace Graph.ViewModels
                 }
                 if (Mod.pLine != null)
                 {
-
+                    //same
                 }
                 if (Mod.Rec != null)
                 {
-
+                    //same
                 }
                 if (Mod.El != null)
                 {
-
+                    //same
                 }
                 if (Mod.P != null)
                 {
-
+                    //same
                 }
             }
 

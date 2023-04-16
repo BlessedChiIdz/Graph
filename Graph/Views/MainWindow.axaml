@@ -9,14 +9,14 @@
 		Icon="/Assets/avalonia-logo.ico"
         Title="Graph">
 
-    <Design.DataContext>
-        <vm:MainWindowViewModel/>
-    </Design.DataContext>
+	<Design.DataContext>
+		<vm:MainWindowViewModel/>
+	</Design.DataContext>
 
     <Grid RowDefinitions="0.05*,*">
 		<Grid Grid.Row="0" ColumnDefinitions="0.1*,0.1*,0.4*,0.2*,0.2*">
-		    <Button Grid.Column="0" Command="{Binding IncSI}">Import</Button>
-		    <TextBox Grid.Column="1" Text="{Binding SelectedColor}"></TextBox>
+		    <Button Grid.Column="0" Command="{Binding SaveFile}">Import</Button>
+			<Button Grid.Column="1" Command="{Binding ReadFile}">Import</Button>
 		</Grid>
 		
 		<Grid Grid.Row="1" ColumnDefinitions="0.3*,0.6*,0.1*">
@@ -29,9 +29,8 @@
 				<ComboBoxItem>Change</ComboBoxItem>
 			</ComboBox>
 			<ContentControl Grid.Column="0" Content="{Binding Content}"/>
-
-			<Canvas Grid.Column="1" Name="MyCanv">
-				
+			
+			<Canvas Grid.Column="1" Name="MyCanv" PointerPressed="PointerPressedOnCanv">
 			</Canvas>
 			
 			<Grid Grid.Column="2" RowDefinitions="0.2*,*">

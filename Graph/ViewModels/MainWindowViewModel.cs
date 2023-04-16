@@ -1,15 +1,16 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Reflection.Metadata;
+using System.IO;
+using System.Net;
+using System.Windows.Ink;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Shapes;
-using Avalonia.Layout;
 using Avalonia.Media;
 using Graph.Models;
 using Graph.Views;
+using Newtonsoft.Json;
 namespace Graph.ViewModels
 {
     public partial class MainWindowViewModel : ViewModelBase
@@ -18,7 +19,7 @@ namespace Graph.ViewModels
         int selectedColor;
         int selectedIndex;
         private IBrush[] brush = new IBrush[] {Brushes.Black,Brushes.Blue,Brushes.Red};
-        
+       
         public int SelectedColor {
             get => selectedColor;
             set => SetProperty(ref selectedColor, value);
@@ -39,7 +40,7 @@ namespace Graph.ViewModels
         public Views.lomLine lomLine { get; set; }
         public ObservableCollection<CanvasModel> CanvasMODEL
         {
-            get => CanvMod;
+            get => CanvMod;  
             set => SetProperty(ref CanvMod, value);
         }
         private UserControl _content;
@@ -153,6 +154,93 @@ namespace Graph.ViewModels
             CanvasModel canvas = CanvasMODEL[SelectedIndex];
             return canvas;
         }
+        public void SaveFile()
+        {
+            Line lineForSave = new Line();
+            Polyline pLineForSave = new Polyline();
+            Rectangle recForSave = new Rectangle();
+            Ellipse elForSave = new Ellipse();
+            Avalonia.Controls.Shapes.Path pForSave = new Avalonia.Controls.Shapes.Path();
+            ObservableCollection<CanvasModel> ColForSave = new ObservableCollection<CanvasModel>();
+            foreach(CanvasModel Mod in CanvasMODEL)
+            {
+                if(Mod.line != null)
+                {
+                    lineForSave.StartPoint = Mod.line.StartPoint;
+                    lineForSave.EndPoint = Mod.line.EndPoint;
+                    lineForSave.Stroke = Mod.line.Stroke;
+                    lineForSave.StrokeThickness = Mod.line.StrokeThickness;
+                    ColForSave.Add(new CanvasModel { Name = Mod.Name, line = lineForSave });
+                }
+                if (Mod.pLine != null)
+                {
+
+                }
+                if (Mod.Rec != null)
+                {
+
+                }
+                if (Mod.El != null)
+                {
+
+                }
+                if (Mod.P != null)
+                {
+
+                }
+            }
+
+
+
+
+
+
+
+            Line test = new Line();
+
+            test.StartPoint = CanvasMODEL[0].line.StartPoint;
+            ObservableCollection<CanvasModel> testCol = new ObservableCollection<CanvasModel>();
+            testCol.Add(new CanvasModel { Name = CanvasMODEL[0].Name, line = test });
+            string jsonqwe = JsonConvert.SerializeObject(ColForSave, Formatting.None,
+                        new JsonSerializerSettings()
+                        {
+                            ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+                        });
+            File.WriteAllText("C:\\Users\\Rik\\source\\repos\\Graph\\jnhbijothrjio.json", jsonqwe);
+        }
+        public void ReadFile()
+        {
+            using (StreamReader r = new StreamReader("C:\\Users\\Rik\\source\\repos\\Graph\\jnhbijothrjio.json"))
+            {
+                string json = r.ReadToEnd();
+                List<CanvasModel> items = JsonConvert.DeserializeObject<List<CanvasModel>>(json);
+                foreach (CanvasModel Canv in items) {
+                    if (Canv.line != null) {
+                        _canv.Children.Add(Canv.line);
+                    }
+                    if (Canv.pLine != null)
+                    {
+                        _canv.Children.Add(Canv.pLine);
+                    }
+                    if (Canv.Rec != null)
+                    {
+                        _canv.Children.Add(Canv.Rec);
+                    }
+                    if (Canv.El != null)
+                    {
+                        _canv.Children.Add(Canv.El);
+                    }
+                    if (Canv.P != null)
+                    {
+                        _canv.Children.Add(Canv.P);
+                    }
+                }
+            }
+            
+        }
+        public void WriteFile() {
+            
+        }
         public void AddLine()
         {
             string start = StartPoint;
@@ -174,7 +262,7 @@ namespace Graph.ViewModels
                 StrokeThickness = Thick,
             };
             
-            CanvMod.Add(new CanvasModel { Name = Name,line=newRec, Start = (resultSt1+resultEnd1)/2,End = (resultSt2 + resultEnd2)/2});
+            CanvMod.Add(new CanvasModel { Name = Name,line=newRec});
             _canv.Children.Add(newRec);
         }
         public void AddLomeLine()
@@ -220,7 +308,7 @@ namespace Graph.ViewModels
             newRec.Fill = brush[SelectedColor];
             Canvas.SetLeft(newRec, resultSt1);
             Canvas.SetTop(newRec, resultSt2);
-            CanvMod.Add(new CanvasModel { Name = Name, Rec = newRec,Left=resultSt1,Top=resultSt2 });
+            CanvMod.Add(new CanvasModel { Name = Name, Rec = newRec});
             _canv.Children.Add(newRec);
 
         }
@@ -250,7 +338,7 @@ namespace Graph.ViewModels
 
             string start = StartPoint;
             string[] wordsSt = start.Split(new char[] { ' ' });
-            Path newRec = new Path();
+            Avalonia.Controls.Shapes.Path newRec = new Avalonia.Controls.Shapes.Path();
             newRec.Data = Geometry.Parse(PathF);
             newRec.Stroke = brush[SelectedColor];
             newRec.StrokeThickness = Thick;
@@ -392,7 +480,7 @@ namespace Graph.ViewModels
                 string[] wordsSt = Dot.Split(new char[] { ' ' });
                 int resultSt1 = Convert.ToInt32(wordsSt[0]);
                 int resultSt2 = Convert.ToInt32(wordsSt[1]);
-                Path rotatedFigure = CanvasMODEL[SelectedIndex].P;
+                Avalonia.Controls.Shapes.Path rotatedFigure = CanvasMODEL[SelectedIndex].P;
 
                 RotateTransform rotateTransform1 = new RotateTransform(React);
                 TranslateTransform translateTransform = new TranslateTransform(resultSt1, resultSt2);
@@ -506,7 +594,7 @@ namespace Graph.ViewModels
                 string[] wordsSt = Sc.Split(new char[] { ' ' });
                 int resultSt1 = Convert.ToInt32(wordsSt[0]);
                 int resultSt2 = Convert.ToInt32(wordsSt[1]);
-                Path rotatedRectangle = CanvasMODEL[SelectedIndex].P;
+                Avalonia.Controls.Shapes.Path rotatedRectangle = CanvasMODEL[SelectedIndex].P;
 
                 ScaleTransform rotateTransform1 = new ScaleTransform(resultSt1, resultSt2);
 
@@ -618,7 +706,7 @@ namespace Graph.ViewModels
                 string[] wordsSt = Sk.Split(new char[] { ' ' });
                 int resultSt1 = Convert.ToInt32(wordsSt[0]);
                 int resultSt2 = Convert.ToInt32(wordsSt[1]);
-                Path rotatedRectangle = CanvasMODEL[SelectedIndex].P;
+                Avalonia.Controls.Shapes.Path rotatedRectangle = CanvasMODEL[SelectedIndex].P;
 
                 SkewTransform rotateTransform1 = new SkewTransform(resultSt1, resultSt2);
 

@@ -1,24 +1,22 @@
 ﻿using Avalonia.Controls.Shapes;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace Graph.Models
 {
     public class CanvasModel
     {
         public string Name { get; set; }
-        public Line? line { get; set; }
-        public Polyline? pLine { get; set; }
-        public Rectangle? Rec { get; set; }
-        public Ellipse? El { get; set; }
-        public Path? P { get; set; }
-        public int? Left { get; set; }
-        public int? Top { get; set; }
-        public double? Start { get; set; }
-        public double? End { get; set; }
+        
+        public virtual Line? line { get; set; }
+
+        public virtual Polyline? pLine { get; set; }
+
+        public virtual Rectangle? Rec { get; set; }
+
+        public virtual Ellipse? El { get; set; }
+
+        public virtual Path? P { get; set; }
+        
 
     }
 }

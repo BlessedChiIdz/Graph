@@ -1,4 +1,5 @@
-﻿using Avalonia.Controls.Shapes;
+﻿using Avalonia;
+using Avalonia.Controls.Shapes;
 using Newtonsoft.Json;
 
 namespace Graph.Models
@@ -17,6 +18,8 @@ namespace Graph.Models
 
         public virtual Path? P { get; set; }
         
+        public int? Start { get; set; }
 
+        public int? End { get; set; }
     }
 }

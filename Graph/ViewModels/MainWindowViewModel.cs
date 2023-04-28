@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Net;
 using System.Windows.Ink;
+using System.Windows.Media.Media3D;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Shapes;
@@ -174,15 +175,28 @@ namespace Graph.ViewModels
                 }
                 if (Mod.pLine != null)
                 {
-                    //same
+                    pLineForSave.Points = Mod.pLine.Points;
+                    pLineForSave.Stroke = Mod.pLine.Stroke;
+                    pLineForSave.StrokeThickness = Mod.pLine.StrokeThickness;
+                    ColForSave.Add(new CanvasModel { Name = Mod.Name, pLine = pLineForSave });
                 }
                 if (Mod.Rec != null)
                 {
-                    //same
+                    recForSave.Width = Mod.Rec.Width;
+                    recForSave.Height = Mod.Rec.Height;
+                    recForSave.StrokeThickness = Mod.Rec.StrokeThickness;
+                    recForSave.Stroke = Mod.Rec.Stroke;
+                    recForSave.Fill = Mod.Rec.Fill;
+                    ColForSave.Add(new CanvasModel { Name = Mod.Name, Rec = recForSave,Start=Mod.Start,End=Mod.End });
                 }
                 if (Mod.El != null)
                 {
-                    //same
+
+                    elForSave.Width = Mod.El.Width;
+                    elForSave.Height = Mod.El.Height;
+                    elForSave.StrokeThickness = Mod.El.StrokeThickness;
+                    elForSave.Stroke = Mod.El.Stroke;
+                    ColForSave.Add(new CanvasModel { Name = Mod.Name, El = elForSave, Start = Mod.Start, End = Mod.End });
                 }
                 if (Mod.P != null)
                 {
@@ -198,7 +212,6 @@ namespace Graph.ViewModels
 
             Line test = new Line();
 
-            test.StartPoint = CanvasMODEL[0].line.StartPoint;
             ObservableCollection<CanvasModel> testCol = new ObservableCollection<CanvasModel>();
             testCol.Add(new CanvasModel { Name = CanvasMODEL[0].Name, line = test });
             string jsonqwe = JsonConvert.SerializeObject(ColForSave, Formatting.None,
@@ -224,6 +237,7 @@ namespace Graph.ViewModels
                     }
                     if (Canv.Rec != null)
                     {
+
                         _canv.Children.Add(Canv.Rec);
                     }
                     if (Canv.El != null)
@@ -308,7 +322,7 @@ namespace Graph.ViewModels
             newRec.Fill = brush[SelectedColor];
             Canvas.SetLeft(newRec, resultSt1);
             Canvas.SetTop(newRec, resultSt2);
-            CanvMod.Add(new CanvasModel { Name = Name, Rec = newRec});
+            CanvMod.Add(new CanvasModel { Name = Name, Rec = newRec,Start=resultSt1,End=resultSt2});
             _canv.Children.Add(newRec);
 
         }
@@ -329,7 +343,7 @@ namespace Graph.ViewModels
             newRec.Stroke = brush[SelectedColor];
             Canvas.SetLeft(newRec, resultSt1);
             Canvas.SetTop(newRec, resultSt2);
-            CanvMod.Add(new CanvasModel { Name = Name, El = newRec });
+            CanvMod.Add(new CanvasModel { Name = Name, El = newRec, Start = resultSt1, End = resultSt2 });
             _canv.Children.Add(newRec);
 
         }
